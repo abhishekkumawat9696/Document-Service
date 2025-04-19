@@ -1,0 +1,31 @@
+server:
+  port: 8082
+
+spring:
+  application:
+    name: document-service
+  datasource:
+    url: jdbc:postgresql://postgres-document:5432/documentdb
+    username: postgres
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://auth-service
+          jwk-set-uri: http://auth-service/oauth2/jwks
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://admin:password@eureka-server:8761/eureka
+
+async:
+  executor:
+    core-pool-size: 5
+    max-pool-size: 10
+    queue-capacity: 100
+    thread-name-prefix: Async-Executor-
