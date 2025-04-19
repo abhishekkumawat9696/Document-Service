@@ -6,6 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public interface DocumentService {
@@ -17,5 +18,13 @@ public interface DocumentService {
             int page, int size, String[] sort
     );
     Page<Document> searchDocuments(String query, int page, int size);
+
+    List<Document> getAllDocuments();
+
+    Document saveDocument(Document document);
+
+    Optional<Document> getDocumentById(Long  id);
+
+
 
 }

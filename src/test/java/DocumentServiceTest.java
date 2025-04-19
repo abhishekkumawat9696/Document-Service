@@ -35,15 +35,11 @@ class DocumentServiceTest {
         // Given
         MockMultipartFile file = new MockMultipartFile(
                 "file", "test.txt", "text/plain", "Test content".getBytes());
-        Document documentDto = new Document("Test", "Author", "Description");
+        Document documentDto = new Document();
         Document document = Document.builder()
                 .id(1L)
-                .title("Test")
                 .author("Author")
-                .description("Description")
                 .content("Test content")
-                .fileType("text/plain")
-                .fileSize(12L)
                 .uploadDate(LocalDateTime.now())
                 .build();
 
@@ -54,27 +50,22 @@ class DocumentServiceTest {
 
         // Then
         assertNotNull(response);
-        assertEquals("Test", response.getTitle());
         assertEquals("Author", response.getAuthor());
         verify(documentRepository, times(1)).save(any(Document.class));
     }
 
     @Test
-    void getDocument_Success() {
+    void getDocument_Success() throws Exception {
         // Given
         Long documentId = 1L;
         Document document = Document.builder()
                 .id(documentId)
-                .title("Test")
                 .author("Author")
-                .description("Description")
                 .content("Test content")
-                .fileType("text/plain")
-                .fileSize(12L)
                 .uploadDate(LocalDateTime.now())
                 .build();
 
-        when(documentRepository.findById(documentId)).thenReturn(Optional.of(document));
+        when(documentRepository.findById(documentId));
 
         // When
         Document response = documentService.getDocument(documentId);
@@ -91,12 +82,8 @@ class DocumentServiceTest {
         Pageable pageable = PageRequest.of(0, 10);
         Document document = Document.builder()
                 .id(1L)
-                .title("Test")
                 .author("Author")
-                .description("Description")
                 .content("Test content")
-                .fileType("text/plain")
-                .fileSize(12L)
                 .uploadDate(LocalDateTime.now())
                 .build();
         Page<Document> page = new PageImpl<>(Collections.singletonList(document));

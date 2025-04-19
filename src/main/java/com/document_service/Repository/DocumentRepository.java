@@ -7,7 +7,6 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import javax.print.Doc;
 import java.awt.print.Pageable;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -27,9 +26,11 @@ public interface DocumentRepository extends JpaRepository<Document, Long> {
 
     Page<Document> findByAuthor(String author, Pageable pageable);
 
-    Document findById(Long aLong);
+    Optional<Document> findById(Long id);
 
     Page<Document> findByTitleContaining(String title, Pageable pageable);
 
     Page<Document> findByUploadDateBetween(LocalDateTime startDate, LocalDateTime endDate, Pageable pageable);
+
+    Page<Document> searchDocuments(String query, Pageable pageable);
 }

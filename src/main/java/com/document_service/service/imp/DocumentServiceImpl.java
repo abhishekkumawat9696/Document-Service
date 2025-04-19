@@ -13,11 +13,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -69,9 +69,8 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public Document getDocument(Long id) throws Exception {
-        Document document = documentRepository.findById(id)
-                .orElseThrow(() -> new Exception("Document not found with id: " + id));
-        return document;
+        Optional<Document> document = documentRepository.findById(id);
+        return document.get();
     }
 
     @Override
@@ -97,7 +96,22 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public Page<Document> searchDocuments(String query, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return documentRepository.searchDocuments(query, pageable);
+        return documentRepository.searchDocuments(query, (java.awt.print.Pageable) pageable);
+    }
+
+    @Override
+    public List<Document> getAllDocuments() {
+        return documentRepository.findAll();
+    }
+
+    @Override
+    public Document saveDocument(Document document) {
+        return documentRepository.save(document);
+    }
+
+    @Override
+    public Optional<Document> getDocumentById(Long id) {
+        return documentRepository.findById(id);
     }
 
     private Sort parseSort(String[] sort) {
@@ -105,9 +119,6 @@ public class DocumentServiceImpl implements DocumentService {
             return Sort.by(Sort.Direction.fromString(sort[1]), sort[0]);
         }
         return Sort.unsorted();
-    }
-    private String extractContent(MultipartFile file) throws IOException {
-        return tika.parseToString(file.getInputStream());
     }
 
     private Document mapToDocumentResponse(Document document) {
